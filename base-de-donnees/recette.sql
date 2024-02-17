@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost:8889
--- Généré le : sam. 17 fév. 2024 à 09:22
+-- Généré le : sam. 17 fév. 2024 à 11:45
 -- Version du serveur : 5.7.39
 -- Version de PHP : 8.2.0
 
@@ -100,7 +100,8 @@ ALTER TABLE `recette`
 -- Index pour la table `utilisateur`
 --
 ALTER TABLE `utilisateur`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`);
 
 --
 -- AUTO_INCREMENT pour les tables déchargées
