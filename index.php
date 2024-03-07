@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 require_once(__DIR__ . '/app/fonction.php');
 ?>
 
@@ -25,21 +27,51 @@ require_once(__DIR__ . '/app/fonction.php');
                     case 'accueil':
                         include_once(__DIR__ . '/app/accueil.php');
                         break;
+                    
                     case 'contact':
                         include_once(__DIR__ . '/app/contact.php');
                         break;
+                    
                     case 'connexion':
-                        include_once(__DIR__ . '/app/connexion.php');
+                        include_once(__DIR__ . '/app/connexion/index.php');
                         break;
+
                     case 'traitement-connexion':
-                        include_once(__DIR__ . '/app/traitement-connexion.php');
+                        include_once(__DIR__ . '/app/connexion/traitement.php');
                         break;
+
                     case 'inscription':
-                        include_once(__DIR__ . '/app/inscription.php');
+                        include_once(__DIR__ . '/app/inscription/index.php');
                         break;
+
                     case 'traitement-inscription':
-                        include_once(__DIR__ . '/app/traitement-inscription.php');
+                        include_once(__DIR__ . '/app/inscription/traitement.php');
                         break;
+
+                    case 'mot-de-passe-oublie':
+                        include_once(__DIR__ . '/app/mot-de-passe-oublie/index.php');
+                        break;
+
+                    case 'traitement-inscription':
+                        include_once(__DIR__ . '/app/mot-de-passe-oublie/traitement.php');
+                        break;
+
+                    case 'mes-recettes':
+                        include_once(__DIR__ . '/app/mes-recettes/index.php');
+                        break;
+
+                    case 'ajout-recette':
+                        include_once(__DIR__ . '/app/mes-recettes/ajout.php');
+                        break;
+
+                    case 'traitement-ajout-recette':
+                        include_once(__DIR__ . '/app/mes-recettes/traitement-ajout.php');
+                        break;
+
+                    case 'deconnexion':
+                        include_once(__DIR__ . '/app/deconnexion.php');
+                        break;
+
                     default:
                         include_once(__DIR__ . '/app/accueil.php');
                         break;

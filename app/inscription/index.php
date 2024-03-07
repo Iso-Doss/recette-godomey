@@ -1,5 +1,10 @@
 <?php
 
+if (est_connecter()) {
+    $message = "Vous êtes déja connecté. Veuillez poursuivre votre navigation.";
+    header('location:index.php?page=accueil&message=' . $message);
+}
+
 $erreurs = [];
 $donnees = [];
 $erreur = '';
@@ -20,7 +25,6 @@ if (isset($_GET['erreur']) && !empty($_GET['erreur'])) {
 if (isset($_GET['success']) && !empty($_GET['success'])) {
     $success = $_GET['success'];
 }
-
 
 ?>
 
