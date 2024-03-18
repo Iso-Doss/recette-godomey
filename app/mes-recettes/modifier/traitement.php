@@ -38,13 +38,20 @@ if (!isset($_FILES['image']) || $_FILES['image']['error'] != 0) {
 if (empty($_POST) || !empty($erreurs)) {
     $erreur = "Oups!!! Un ou plusieur champs sont vide(s) ou mal(s) renseigné(s).";
 } else {
-    $donnees['id_utilisateur'] = $_SESSION['utilisateur_connecter']['id'];
-    $ajout_recette = ajout_recette($donnees);
-    if ($ajout_recette) {
-        $success = "Ajout de recette effectuée avec succès.";
+    //$donnees['id_utilisateur'] = $_SESSION['utilisateur_connecter']['id'];
+    $donnees['id_recette'] = $_GET['id'];
+    $modifier_recette = modifier_recette($donnees);
+    if ($modifier_recette) {
+        $success = "Modification de recette effectuée avec succès.";
     } else {
-        $erreur = "Oups!!! Une erreur est survenue lors de l'ajout de la recette.Veuille réessayer.";
+        $erreur = "Oups!!! Une erreur est survenue lors de la modification de la recette.Veuille réessayer.";
     }
 }
 
-header('location: index.php?page=ajout-recette&erreur=' . $erreur . '&erreurs=' . json_encode($erreurs)   . '&donnees=' . json_encode($donnees) . '&success=' . $success);
+if (empty($erreur)) {
+    header('location: index.php?page=mes-recettes&erreur=' . $erreur . '&erreurs=' . json_encode($erreurs)   . '&donnees=' . json_encode($donnees) . '&success=' . $success);
+} else {
+    header('location: index.php?page=modifier-recette&id=' . $_GET['id'] . '&erreur=' . $erreur . '&erreurs=' . json_encode($erreurs)   . '&donnees=' . json_encode($donnees) . '&success=' . $success);
+}
+
+

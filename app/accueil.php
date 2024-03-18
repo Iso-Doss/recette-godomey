@@ -5,7 +5,18 @@ if (!empty($_GET['message'])) {
         <?= $_GET['message']; ?>
     </div>
 <?php
+
 }
+
+if (!empty($_GET['erreur'])) {
+?>
+    <div class="alert alert-danger" role="alert">
+        <?= $_GET['erreur']; ?>
+    </div>
+<?php
+}
+
+$recettes = recettes();
 ?>
 
 <h3>
@@ -13,125 +24,27 @@ if (!empty($_GET['message'])) {
 </h3>
 
 <div class="row g-4">
-    <div class="col-md-3">
-        <div class="card">
-            <img src="public/asset/img/recette.png" class="card-img-top" alt="Image de la recette">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <a href="#" class="btn btn-primary">Voir les détails</a>
+    <?php if (empty($recettes)) { ?>
+        <p>
+            Aucune recette n'est disponible pour le moment.
+        </p>
+        <?php } else {
+        foreach ($recettes as $recette) { ?>
+            <div class="col-md-3">
+                <div class="card">
+                    <img style="height: 200px;width: 100%;object-fit: cover;" src="/app/uploads/<?= $recette['image']; ?>" class="card-img-top" alt="Image de la recette">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <?= $recette['nom']; ?>
+                        </h5>
+                        <a href="#" class="btn btn-primary">Voir les détails</a>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card">
-            <img src="public/asset/img/recette.png" class="card-img-top" alt="Image de la recette">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <a href="#" class="btn btn-primary">Voir les détails</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card">
-            <img src="public/asset/img/recette.png" class="card-img-top" alt="Image de la recette">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <a href="#" class="btn btn-primary">Voir les détails</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card">
-            <img src="public/asset/img/recette.png" class="card-img-top" alt="Image de la recette">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <a href="#" class="btn btn-primary">Voir les détails</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card">
-            <img src="public/asset/img/recette.png" class="card-img-top" alt="Image de la recette">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <a href="#" class="btn btn-primary">Voir les détails</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card">
-            <img src="public/asset/img/recette.png" class="card-img-top" alt="Image de la recette">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <a href="#" class="btn btn-primary">Voir les détails</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card">
-            <img src="public/asset/img/recette.png" class="card-img-top" alt="Image de la recette">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <a href="#" class="btn btn-primary">Voir les détails</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card">
-            <img src="public/asset/img/recette.png" class="card-img-top" alt="Image de la recette">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <a href="#" class="btn btn-primary">Voir les détails</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card">
-            <img src="public/asset/img/recette.png" class="card-img-top" alt="Image de la recette">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <a href="#" class="btn btn-primary">Voir les détails</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card">
-            <img src="public/asset/img/recette.png" class="card-img-top" alt="Image de la recette">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <a href="#" class="btn btn-primary">Voir les détails</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card">
-            <img src="public/asset/img/recette.png" class="card-img-top" alt="Image de la recette">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <a href="#" class="btn btn-primary">Voir les détails</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card">
-            <img src="public/asset/img/recette.png" class="card-img-top" alt="Image de la recette">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <a href="#" class="btn btn-primary">Voir les détails</a>
-            </div>
-        </div>
-    </div>
+    <?php
+        }
+    }
+    ?>
 </div>
 
 <div class="mt-3 d-flex justify-content-end">

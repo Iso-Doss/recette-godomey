@@ -43,7 +43,7 @@ if (isset($_GET['success']) && !empty($_GET['success'])) {
 </div>
 
 <div class="row g-3 d-flex justify-content-center">
-    <form class="col-md-6" action="index.php?page=traitement-ajout-recette" method="POST" novalidate enctype="multipart/form-data">
+    <form class="col-md-6" action="index.php?page=traitement-ajouter-recette" method="POST" novalidate enctype="multipart/form-data">
         <p class="text-center">
             Veuillez fournir les informations relatives a la nouvelle recette.
         </p>

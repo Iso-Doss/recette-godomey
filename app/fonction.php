@@ -161,8 +161,8 @@ function enregistrer_une_image($nom_du_champ): bool|string
 
         // Testons, si le dossier uploads est manquant
         $path = __DIR__ . '/uploads/';
-        mkdir($path);
         if (!is_dir($path)) {
+            mkdir($path);
             return "L'envoi n'a pas pu être effectué, le dossier uploads est manquant";
         }
 
@@ -171,34 +171,126 @@ function enregistrer_une_image($nom_du_champ): bool|string
 
         return $est_enregistrer;
     }
+    return -1;
 }
 
 /**
+ * Cette fonction permet de recupere la liste des recettes diponible u ceux appartenant a un utilisateur.
  * 
+ * @param int|null $id_utilisateur L'id de l'utilisateur.
+ * @return array $recettes La liste des recettes.
  */
-// function recettes($id_utilisateur){
-    
-//     $recettes = [];
+function recettes(int $id_utilisateur = null): array
+{
+    $recettes = [];
 
-//     $db = connexion_db();
+    $db = connexion_db();
 
-//     if (is_object($db)) {
-//         $requetteSql = 'SELECT * FROM `utilisateur` WHERE `email`=:email and `mot-de-passe`=:mot_de_passe';
-//         $requette = $db->prepare($requetteSql);
-//         try {
+    if (is_object($db)) {
+        $requetteSql = 'SELECT * FROM `recette`';
 
-//             $requette->execute(
-//                 [
-//                     'email' => $email,
-//                     'mot_de_passe' => $mot_de_passe
-//                 ]
-//             );
-//             $utilisateur = $requette->fetch(PDO::FETCH_ASSOC);
-//             if (is_array($utilisateur)) {
-//                 $utilisateur_est_trouver =  $utilisateur;
-//             }
-//         } catch (Exception $e) {
-//             $utilisateur_est_trouver = [];
-//         }
-//     }
-// }
+        if (!is_null($id_utilisateur)) {
+            $requetteSql = $requetteSql . ' WHERE `id_utilisateur`=:id_utilisateur';
+        }
+
+        $requette = $db->prepare($requetteSql);
+        try {
+            $donnees = [];
+
+            if (!is_null($id_utilisateur)) {
+                $donnees['id_utilisateur'] = $id_utilisateur;
+            }
+
+            $requette->execute($donnees);
+            $recettes = $requette->fetchAll(PDO::FETCH_ASSOC);
+            if (is_array($recettes)) {
+                $recettes =  $recettes;
+            }
+        } catch (Exception $e) {
+            $recettes = [];
+        }
+    }
+
+    return $recettes;
+}
+
+/**
+ * Cette fonction permet de recupere une recette grace a son id.
+ * 
+ * @param int $id_recette L'id de la recette.
+ * @return array $recette Les informations d'une recette.
+ */
+function recette(int $id_recette): array
+{
+    $recette = [];
+
+    $db = connexion_db();
+
+    if (is_object($db)) {
+        $requetteSql = 'SELECT * FROM `recette` WHERE `id`=:id_recette';
+
+        $requette = $db->prepare($requetteSql);
+        try {
+            $requette->execute([
+                'id_recette' => $id_recette
+            ]);
+            $recette = $requette->fetch(PDO::FETCH_ASSOC);
+            if (is_array($recette)) {
+                $recette =  $recette;
+            } else {
+                $recette = [];
+            }
+        } catch (Exception $e) {
+            $recette = [];
+        }
+    }
+
+    return $recette;
+}
+
+/**
+ * Cette fonction permet de mettre a jour une recette dans la base de données.
+ * 
+ * @param array $donnees_recette Les données de la recette a mettre a jour.
+ * @return bool
+ */
+function modifier_recette(array $donnees_recette): bool
+{
+    $est_modifier = false;
+
+    $db = connexion_db();
+
+    if (is_object($db)) {
+        $requetteSql = 'UPDATE `recette` SET `nom`=:nom,`description`=:description,`recette`=:recette,`image`=:image WHERE `id` = :id_recette';
+        $requette = $db->prepare($requetteSql);
+        try {
+            $est_modifier = $requette->execute($donnees_recette);
+        } catch (Exception $e) {
+            $est_modifier = false;
+        }
+    }
+
+    return $est_modifier;
+}
+
+
+function supprimer_recette(int $id_recette): bool
+{
+    $est_supprimer = false;
+
+    $db = connexion_db();
+
+    if (is_object($db)) {
+        $requetteSql = 'DELETE FROM `recette` WHERE `id` = :id_recette';
+        $requette = $db->prepare($requetteSql);
+        try {
+            $est_supprimer = $requette->execute([
+                'id_recette' => $id_recette
+            ]);
+        } catch (Exception $e) {
+            $est_supprimer = false;
+        }
+    }
+
+    return $est_supprimer;
+}
