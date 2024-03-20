@@ -114,7 +114,17 @@ function chercher_utilisateur_par_son_email_et_son_mot_de_passe(string $email, s
  */
 function est_connecter(): bool
 {
-    return isset($_SESSION['utilisateur_connecter']) && !empty($_SESSION['utilisateur_connecter']);
+    $est_connecter = false;
+    if (isset($_SESSION['utilisateur_connecter']) && !empty($_SESSION['utilisateur_connecter'])) {
+        $est_connecter = chercher_utilisateur_par_son_email($_SESSION['utilisateur_connecter']['email']);
+        if ($est_connecter) {
+            return true;
+        } else {
+            session_destroy();
+        }
+    }
+
+    return $est_connecter;
 }
 
 /**
@@ -178,9 +188,11 @@ function enregistrer_une_image($nom_du_champ): bool|string
  * Cette fonction permet de recupere la liste des recettes diponible u ceux appartenant a un utilisateur.
  * 
  * @param int|null $id_utilisateur L'id de l'utilisateur.
+ * @param int $nombre_de_recette_par_page Le nombre de recette par page.
+ * @param int $numero_de_page Le numero de la page.
  * @return array $recettes La liste des recettes.
  */
-function recettes(int $id_utilisateur = null): array
+function recettes(int $id_utilisateur = null, int $nombre_de_recette_par_page = 10, int $numero_de_page = 1): array
 {
     $recettes = [];
 
@@ -193,7 +205,10 @@ function recettes(int $id_utilisateur = null): array
             $requetteSql = $requetteSql . ' WHERE `id_utilisateur`=:id_utilisateur';
         }
 
+        $requetteSql = $requetteSql . ' limit ' . $nombre_de_recette_par_page . ' offset ' . ($nombre_de_recette_par_page * ($numero_de_page - 1));
+
         $requette = $db->prepare($requetteSql);
+
         try {
             $donnees = [];
 
@@ -293,4 +308,98 @@ function supprimer_recette(int $id_recette): bool
     }
 
     return $est_supprimer;
+}
+
+/**
+ * Cette fonction permet de compter le nombre de recette qu'il y a dans la base de donnees.
+ * 
+ * @param int|null $id_utilisateur L'id de l'utilisateur.
+ * @return int $nombre_de_recette_dans_la_base_de_donnees Le nombre de recette dans la base de donnees.
+ */
+function nombre_de_recette_dans_la_base_de_donnees(int $id_utilisateur = null): int
+{
+    $nombre_de_recette_dans_la_base_de_donnees = 0;
+
+    $db = connexion_db();
+
+    if (is_object($db)) {
+        $requetteSql = 'SELECT count(*) as total FROM `recette`';
+
+        if (!is_null($id_utilisateur)) {
+            $requetteSql = $requetteSql . ' WHERE `id_utilisateur`=:id_utilisateur';
+        }
+
+        $requette = $db->prepare($requetteSql);
+
+        try {
+            $donnees = [];
+
+            if (!is_null($id_utilisateur)) {
+                $donnees['id_utilisateur'] = $id_utilisateur;
+            }
+
+            $requette->execute($donnees);
+            $requetteTotal = $requette->fetch(PDO::FETCH_ASSOC);
+
+            if (is_array($requetteTotal)) {
+                $nombre_de_recette_dans_la_base_de_donnees =  $requetteTotal['total'];
+            }
+        } catch (Exception $e) {
+            $nombre_de_recette_dans_la_base_de_donnees = 0;
+        }
+    }
+
+    return $nombre_de_recette_dans_la_base_de_donnees;
+}
+
+/**
+ * Cette fonction permet de mettre a jour un utilisateur dans la base de données.
+ * 
+ * @param array $donnees_utilisateur Les données de l'utilisateur a mettre a jour.
+ * @return bool
+ */
+function modifier_utilisateur(array $donnees_utilisateur): bool
+{
+    $est_modifier = false;
+
+    $db = connexion_db();
+
+    if (is_object($db)) {
+        $requetteSql = 'UPDATE `utilisateur` SET `nom`=:nom, `prenoms`=:prenoms,`sexe`=:sexe WHERE`id` = :id_utilisateur';
+
+        $requette = $db->prepare($requetteSql);
+        try {
+            $est_modifier = $requette->execute($donnees_utilisateur);
+        } catch (Exception $e) {
+            $est_modifier = false;
+        }
+    }
+
+    return $est_modifier;
+}
+
+/**
+ * Cette fonction permet de mettre a jour le mot de passe d'un utilisateur dans la base de données.
+ * 
+ * @param array $donnees_utilisateur Les données de l'utilisateur a mettre a jour.
+ * @return bool
+ */
+function modifier_mot_de_passe_utilisateur(array $donnees_utilisateur): bool
+{
+    $est_modifier = false;
+
+    $db = connexion_db();
+
+    if (is_object($db)) {
+        $requetteSql = 'UPDATE `utilisateur` SET `mot-de-passe`=:mot_de_passe WHERE`id` = :id_utilisateur';
+
+        $requette = $db->prepare($requetteSql);
+        try {
+            $est_modifier = $requette->execute($donnees_utilisateur);
+        } catch (Exception $e) {
+            $est_modifier = false;
+        }
+    }
+
+    return $est_modifier;
 }
